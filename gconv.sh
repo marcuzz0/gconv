@@ -153,9 +153,9 @@ OPTIONS=(
 
 	1 "WGS84 to ENU/XYZ"
 	2 "ENU/XYZ to WGS84"
-	3 "Da file *.csv"
-	4 "DMS to DD"
-	5 "DD to DMS"
+	3 "DMS to DD"
+	4 "DD to DMS"
+	5 "Da file *.csv"
 	6 "Esci"
 
 	)
@@ -201,6 +201,22 @@ echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Inco
 ;;
 
 3)	clear
+echo ""
+echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DMS to DD${normale}"
+echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate geografiche"
+echo -e "${normale}WGS84 a coordinate piane ENU o geocentriche XYZ"
+echo ""
+	read -p "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci EPSG del file in uscita:${normale} (default $EPSG_OUT) "
+	if [[ $REPLY ]]; then
+		EPSG_OUT=$REPLY
+	fi
+echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
+echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
+	cs2cs -r +init=epsg:4326 +to +init=epsg:$EPSG_OUT
+;;
+
+
+5)	clear
 echo ""
 echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}Da file *.csv${normale}"
 echo -e "${normale}Questo tool permette la conversione di coordinate a partire da un file *.csv"
@@ -370,7 +386,6 @@ echo "    ${grassetto}${txtverde}$QUE3${normale}"
 						fi
 
 ;;
-
 
 6)		exit
 ;;
