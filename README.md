@@ -9,7 +9,7 @@ Di seguito vengono riportati i passaggi per l'installazione delle dipendenze nec
 
 NB: per il sistema operativo Windows 10 è necessario abilitare la bash di Windows, ad esempio (https://www.lffl.org/2016/08/guida-abilitare-la-bash-windows-10.html)
 
-## Installazione per Debian or Ubuntu Linux
+## Installazione per Debian, Ubuntu Linux, Windows 10
 ```
 $ sudo apt-get update && sudo apt-get upgrade
 $ sudo apt-get install proj-bin
@@ -29,14 +29,3 @@ $ git clone https://github.com/marcuzz0/gconv.git
 $ brew install dialog
 $ echo 'export PATH="$PATH:$HOME/bin/gconv"' >> .bashrc
 ````
-
-## Installazione per Windows 10
-```
-$ sudo apt-get update && sudo apt-get upgrade
-$ sudo apt-get install proj-bin
-$ mkdir bin
-$ cd $HOME/bin
-$ git clone https://github.com/marcuzz0/gconv.git
-$ sudo apt-get install l dialog
-$ echo "export PATH="$PATH:$HOME/bin/gconv"" >> .bashrc
-```
