@@ -1,6 +1,6 @@
 # gconv
 ## Premessa
-gconv è uno script shell scritto in bash che permette la conversione di coordinate con vari metodi.
+gconv (gestione conversioni) è uno script shell scritto in bash che permette la conversione di coordinate con vari metodi.
 Si può Copiare/Incollare una lista di punti direttamente nel terminale oppure utilizzare un file *.csv.
 Inoltre lo script può convertire coordinate geografiche da gradi sessagesimali a gradi sessadecimali.
 Le conversioni avvengono per mezzo del potente motore cs2cs (https://proj.org/apps/cs2cs.html).

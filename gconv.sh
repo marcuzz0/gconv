@@ -20,6 +20,7 @@ SEP=","
 QUE1="no"
 QUE2="si"
 QUE3="no"
+QUE4="1"
 
 #########################################################################################
 # VARIABILI DI FORMATTAZIONE
@@ -142,85 +143,121 @@ PATH_FILE,QUE1,SEP,EPSG_GEOGR,EPSG_IN,EPSG_OUT,FILE_NAME,TYPE (){
 #########################################################################################
 clear
 
-HEIGHT=14
+HEIGHT=12
 WIDTH=35
-CHOICE_HEIGHT=14
+CHOICE_HEIGHT=12
 BACKTITLE="$BTITLE"
 TITLE="Menù Principale"
 MENU="Scegli un'opzione:"
 
 OPTIONS=(
 
-	1 "WGS84 to ENU/XYZ"
-	2 "ENU/XYZ to WGS84"
-	3 "DMS to DD"
-	4 "DD to DMS"
-	5 "Da file *.csv"
-	6 "Esci"
+	1 "Da singolo punto"
+	2 "Da file *.csv"
+	3 "DD>DMS/DMS>DD"
+	4 "Esci"
 
 	)
 
 	choice=$(dialog --clear \
-                --backtitle "$BACKTITLE" \
-                --title "$TITLE" \
-                --menu "$MENU" \
-                $HEIGHT $WIDTH $CHOICE_HEIGHT \
-                "${OPTIONS[@]}" \
-                2>&1 >/dev/tty)
+                	--backtitle "$BACKTITLE" \
+                	--title "$TITLE" \
+                	--menu "$MENU" \
+                	$HEIGHT $WIDTH $CHOICE_HEIGHT \
+                	"${OPTIONS[@]}" \
+                	2>&1 >/dev/tty)
 
 	case $choice in
 
 1)	clear
 echo ""
-echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}WGS84 to ENU/XYZ${normale}"
-echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate geografiche"
-echo -e "${normale}WGS84 a coordinate piane ENU o geocentriche XYZ"
-echo ""
-	read -p "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci EPSG del file in uscita:${normale} (default $EPSG_OUT) "
-	if [[ $REPLY ]]; then
-		EPSG_OUT=$REPLY
-	fi
-echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
-echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
-	cs2cs -r +init=epsg:4326 +to +init=epsg:$EPSG_OUT
-;;
-
-2)	clear
-echo ""
-echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}ENU/XYZ to WGS84${normale}"
-echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate piane ENU"
-echo -e "${normale}o geocentriche XYZ a coordinate geograficeh WGS84 (L,L,E)"
+echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}Da singolo punto${normale}"
+echo -e "${normale}Questo tool permette la conversione di un singolo punto inserendone le coordinate."
 echo ""
 	read -p "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci EPSG del file in entrata:${normale} (default $EPSG_IN) "
 	if [[ $REPLY ]]; then
 		EPSG_IN=$REPLY
 	fi
 echo "    ${grassetto}${txtverde}$EPSG_IN${normale}"
-echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
-	cs2cs -s -f '%.8f' +init=epsg:$EPSG_IN +to +init=epsg:4326
+	read -p "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci EPSG del file in uscita:${normale} (default $EPSG_OUT) "
+	if [[ $REPLY ]]; then
+		EPSG_OUT=$REPLY
+	fi
+echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
+		if [[ $EPSG_IN = 4328 ]]; then
+				# conversione da geocentriche a ...
+					# conversione da geocentriche a geografiche
+						if [[ $EPSG_OUT = 4326 ]] || [[ $EPSG_OUT = 3857 ]]; then
+							echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+							echo ""
+							read VAR0
+					 		echo $VAR0 \
+								| cs2cs -f '%.8f' +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+								| gawk '{printf("%10.8f\t%10.8f\t%8.3f\n", $2, $1, $3)}'
+						else
+							# conversione da geocentriche a piane
+							echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+							echo ""
+							read VAR0
+							echo $VAR0 \
+ 								| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+								| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+						fi
+		elif [[ $EPSG_IN = 4326 ]] || [[ $EPSG_IN = 3857 ]]; then
+						# conversione da geografiche a ...
+						# conversione da geografiche a geocentriche
+						if [[ $EPSG_OUT = 4328 ]]; then
+							echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+							echo ""
+							read VAR0
+					 		echo $VAR0 \
+								| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+								| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+						else
+						#  conversione da geografiche a piane
+						echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+						echo ""
+						read VAR0
+						echo $VAR0 \
+								| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+								| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+						fi
+		else
+					# conversione da piane a ...
+					if [[ $EPSG_OUT = 4328 ]]; then
+					# comando di conversione da piane a geocentriche
+					echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+					echo ""
+					read VAR0
+					echo $VAR0 \
+							| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+							| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+					elif [[ $EPSG_OUT = 4326 ]] || [[ $EPSG_OUT = 3857 ]]; then
+					# comando di conversione da piane a geografiche
+					echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+					echo ""
+					read VAR0
+					echo $VAR0 \
+							| cs2cs -f '%.8f' +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+							| gawk '{printf("%10.8f\t%10.8f\t%8.3f\n", $2, $1, $3)}'
+					else
+					# comando di conversione da piane a piane
+					echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+					echo ""
+					read VAR0
+					echo $VAR0 \
+							| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
+							| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+					fi
+		fi
+echo ""
+echo -n "Premi un tasto per tornare al menù principale... "
+echo ""
+read
+	gconv.sh
 ;;
 
-3)	clear
-echo ""
-echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DMS to DD${normale}"
-echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate geografiche"
-echo -e "${normale}WGS84 espressse in gradi sessagesimali a gradi sessadecimali"
-echo ""
-echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
-	cs2cs -f "%.6f" +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84
-;;
-
-4)	clear
-echo ""
-echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DD to DMS${normale}"
-echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate geografiche"
-echo -e "${normale}WGS84 espressse in gradi sessadecimali a gradi sessagesimali"
-echo ""
-echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
-	cs2cs +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84
-;;
-
-5)	clear
+2)	clear
 echo ""
 echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}Da file *.csv${normale}"
 echo -e "${normale}Questo tool permette la conversione di coordinate a partire da un file *.csv"
@@ -390,6 +427,39 @@ echo "    ${grassetto}${txtverde}$QUE3${normale}"
 						fi
 ;;
 
-6)		exit
+3)	clear
+echo ""
+echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DD>DMS/DMS>DD${normale}"
+echo -e "${normale}Questo tool permette la conversione di coordinate geografiche WGS84 da gradi"
+echo -e "${normale}sessagesimali a gradi sessadecimali e viceversa"
+echo ""
+read -p "${grassetto}${txtverde}-->${normale} Vuoi convertire da DD>DMS o da DMS>DD? (1-2) (default $QUE4): "
+	if [[ $REPLY ]]; then
+		QUE4=$REPLY
+	fi
+	# echo $QUE4
+		if [ $QUE4 = "1" ]; then
+			#LAT,LON,HEI
+			echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+			echo ""
+			read VAR0
+			echo $VAR0 \
+			| cs2cs +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84
+		else
+			echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
+			echo ""
+			read VAR0
+			echo $VAR0 \
+			| cs2cs -f "%.8f" +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84 \
+			#| gawk '{printf ("%d\t"); printf("%10.8f\t%10.8f\t%8.3f\n", $1, $2, $3)}'
+		fi
+echo ""
+echo -n "Premi un tasto per tornare al menù principale... "
+echo ""
+read
+	gconv.sh
+;;
+
+4)		exit
 ;;
 esac
