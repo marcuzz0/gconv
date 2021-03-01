@@ -16,6 +16,7 @@ $ sudo apt-get install proj-bin
 $ mkdir bin
 $ cd $HOME/bin
 $ git clone https://github.com/marcuzz0/gconv.git
+$ sudo apt-get install l dialog
 $ echo "export PATH="$PATH:$HOME/bin/gconv"" >> .bashrc
 ```
 
@@ -25,6 +26,7 @@ $ brew install proj
 $ mkdir bin
 $ cd $HOME/bin
 $ git clone https://github.com/marcuzz0/gconv.git
+$ brew install dialog
 $ echo 'export PATH="$PATH:$HOME/bin/gconv"' >> .bashrc
 ````
 
@@ -35,5 +37,6 @@ $ sudo apt-get install proj-bin
 $ mkdir bin
 $ cd $HOME/bin
 $ git clone https://github.com/marcuzz0/gconv.git
+$ sudo apt-get install l dialog
 $ echo "export PATH="$PATH:$HOME/bin/gconv"" >> .bashrc
 ```
