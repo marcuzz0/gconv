@@ -204,17 +204,21 @@ echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Inco
 echo ""
 echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DMS to DD${normale}"
 echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate geografiche"
-echo -e "${normale}WGS84 a coordinate piane ENU o geocentriche XYZ"
+echo -e "${normale}WGS84 espressse in gradi sessagesimali a gradi sessadecimali"
 echo ""
-	read -p "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci EPSG del file in uscita:${normale} (default $EPSG_OUT) "
-	if [[ $REPLY ]]; then
-		EPSG_OUT=$REPLY
-	fi
-echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
-	cs2cs -r +init=epsg:4326 +to +init=epsg:$EPSG_OUT
+	cs2cs -f "%.6f" +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84
 ;;
 
+4)	clear
+echo ""
+echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DD to DMS${normale}"
+echo -e "${normale}Questo tool permette la conversione di coordinate Copia/Incolla da coordinate geografiche"
+echo -e "${normale}WGS84 espressse in gradi sessadecimali a gradi sessagesimali"
+echo ""
+echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Copia/Incolla le coordinate:\n${normale}"
+	cs2cs +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84
+;;
 
 5)	clear
 echo ""
@@ -384,10 +388,8 @@ echo "    ${grassetto}${txtverde}$QUE3${normale}"
 							read
 								gconv.sh
 						fi
-
 ;;
 
 6)		exit
 ;;
-
 esac
