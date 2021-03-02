@@ -173,6 +173,7 @@ OPTIONS=(
 echo ""
 echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}Da singolo punto${normale}"
 echo -e "${normale}Questo tool permette la conversione di un singolo punto inserendone le coordinate."
+echo -e "${normale}Usa il ${grassetto}${txtrosso}tab${normale} come separatore dei campi."
 echo ""
 	read -p "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci EPSG del file in entrata:${normale} (default $EPSG_IN) "
 	if [[ $REPLY ]]; then
@@ -193,7 +194,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 							read VAR0
 					 		echo $VAR0 \
 								| cs2cs -f '%.8f' +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-								| gawk '{printf("%10.8f\t%10.8f\t%8.3f\n", $2, $1, $3)}'
+								| gawk '{printf("%10.8f\t%10.8f\t%5.3f\n", $2, $1, $3)}'
 						else
 							# conversione da geocentriche a piane
 							echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
@@ -201,7 +202,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 							read VAR0
 							echo $VAR0 \
  								| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-								| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+								| gawk '{printf("%10.3f\t%10.3f\t%5.3f\n", $1, $2, $3)}'
 						fi
 		elif [[ $EPSG_IN = 4326 ]] || [[ $EPSG_IN = 3857 ]]; then
 						# conversione da geografiche a ...
@@ -212,7 +213,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 							read VAR0
 					 		echo $VAR0 \
 								| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-								| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+								| gawk '{printf("%10.3f\t%10.3f\t%5.3f\n", $1, $2, $3)}'
 						else
 						#  conversione da geografiche a piane
 						echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
@@ -220,7 +221,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 						read VAR0
 						echo $VAR0 \
 								| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-								| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+								| gawk '{printf("%10.3f\t%10.3f\t%5.3f\n", $1, $2, $3)}'
 						fi
 		else
 					# conversione da piane a ...
@@ -231,7 +232,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 					read VAR0
 					echo $VAR0 \
 							| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-							| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+							| gawk '{printf("%10.3f\t%10.3f\t%5.3f\n", $1, $2, $3)}'
 					elif [[ $EPSG_OUT = 4326 ]] || [[ $EPSG_OUT = 3857 ]]; then
 					# comando di conversione da piane a geografiche
 					echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
@@ -239,7 +240,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 					read VAR0
 					echo $VAR0 \
 							| cs2cs -f '%.8f' +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-							| gawk '{printf("%10.8f\t%10.8f\t%8.3f\n", $2, $1, $3)}'
+							| gawk '{printf("%10.8f\t%10.8f\t%5.3f\n", $2, $1, $3)}'
 					else
 					# comando di conversione da piane a piane
 					echo -e "${grassetto}${txtverde}-->${normale} ${grassetto}${txtbianco}Inserisci le coordinate:${normale} "
@@ -247,7 +248,7 @@ echo "    ${grassetto}${txtverde}$EPSG_OUT${normale}"
 					read VAR0
 					echo $VAR0 \
 							| cs2cs -r +init=epsg:$EPSG_IN +to +init=epsg:$EPSG_OUT \
-							| gawk '{printf("%10.3f\t%10.3f\t%8.3f\n", $1, $2, $3)}'
+							| gawk '{printf("%10.3f\t%10.3f\t%5.3f\n", $1, $2, $3)}'
 					fi
 		fi
 echo ""
@@ -431,7 +432,8 @@ echo "    ${grassetto}${txtverde}$QUE3${normale}"
 echo ""
 echo -e "${txtsfoblu}${grassetto}$ONLY_TITLE${normale} > ${txtverde}${grassetto}DD>DMS/DMS>DD${normale}"
 echo -e "${normale}Questo tool permette la conversione di coordinate geografiche WGS84 da gradi"
-echo -e "${normale}sessagesimali a gradi sessadecimali e viceversa"
+echo -e "${normale}sessagesimali a gradi sessadecimali e viceversa."
+echo -e "${normale}Usa il ${grassetto}${txtrosso}tab${normale} come separatore dei campi."
 echo ""
 read -p "${grassetto}${txtverde}-->${normale} Vuoi convertire da DD>DMS o da DMS>DD? (1-2) (default $QUE4): "
 	if [[ $REPLY ]]; then
