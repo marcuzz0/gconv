@@ -1,0 +1,3 @@
+#!/bin/tcsh
+echo $2 $1 $3 | cs2cs +init=epsg:4326 +to +init=epsg:4328 \
+| gawk '{printf("%10.3f\t%10.3f\t%5.3f\n", $1, $2, $3)}'

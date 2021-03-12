@@ -1,0 +1,5 @@
+#!/bin/tcsh
+set EPSG = 3004
+echo $1 $2 $3 | cs2cs -r +init=epsg:4326 +to +init=epsg:$EPSG \
+| gawk '{printf("%10.3f\t%12.3f\t%12.3f\n",$1,$2,$3)}' \
+| gawk '{printf("%10.3f\t%12.3f\t%12.3f\n", $1, $2, $3)}'

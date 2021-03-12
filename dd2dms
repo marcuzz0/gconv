@@ -1,0 +1,2 @@
+#!/bin/tcsh
+echo $1 $2 $3 | cs2cs +proj=latlong +datum=WGS84 +to +proj=latlong +datum=WGS84
