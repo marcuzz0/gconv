@@ -1,0 +1,4 @@
+#!/bin/tcsh
+set EPSG = 32633
+echo $1 $2 $3 | cs2cs -f "%.3f" +proj=geocent +ellps=WGS84 +datum=WGS84 +to +init=epsg:$EPSG \
+| awk '{printf("%10.3f\t%12.3f\t%12.3f\n",$1,$2,$3)}'
